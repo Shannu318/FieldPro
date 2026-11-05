@@ -28,3 +28,5 @@ media/
 .DS_Store
 Thumbs.db
 users/static/users/style_backup.css
+
+!.env.example
