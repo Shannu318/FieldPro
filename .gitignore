@@ -26,4 +26,5 @@ media/
 
 # Operating system files
 .DS_Store
-Thumbs.dbusers/static/users/style_backup.css
+Thumbs.db
+users/static/users/style_backup.css
