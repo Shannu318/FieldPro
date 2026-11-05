@@ -1,0 +1,29 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Django database
+db.sqlite3
+db.sqlite3-journal
+
+# Environment secrets
+.env
+.env.*
+
+# Django generated files
+staticfiles/
+media/
+
+# Editor files
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.dbusers/static/users/style_backup.css

@@ -1,0 +1,162 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FieldPro | Field Service Management</title>
+
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="home-page">
+
+    <nav class="home-nav">
+        <a href="{% url 'home' %}" class="home-logo">
+            <span class="home-logo-icon"><i class="fa-solid fa-bolt"></i></span>
+            <span>Field<span>Pro</span></span>
+        </a>
+
+        <div class="home-nav-links">
+            <a href="#features">Features</a>
+            <a href="{% url 'login' %}" class="home-login-btn">Login</a>
+            <a href="{% url 'register' %}" class="home-register-btn">Get Started</a>
+        </div>
+    </nav>
+
+    <main>
+        <section class="home-hero">
+            <div class="home-hero-content">
+                <span class="home-eyebrow">
+                    <i class="fa-solid fa-bolt"></i>
+                    SMARTER SERVICE MANAGEMENT
+                </span>
+
+                <h1>Manage service operations <span>smarter.</span></h1>
+
+                <p>
+                    One platform connecting customers, technicians and managers
+                    to simplify service requests and track progress from start to finish.
+                </p>
+
+                <div class="home-hero-buttons">
+                    <a href="{% url 'login' %}" class="home-primary-btn">
+                        Get Started <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="#features" class="home-secondary-btn">
+                        Explore Features
+                    </a>
+                </div>
+
+                <div class="home-trust-note">
+                    <i class="fa-solid fa-circle-check"></i>
+                    One place for requests, assignments and service updates
+                </div>
+            </div>
+
+            <div class="home-preview">
+                <div class="home-preview-heading">
+                    <div>
+                        <span>FIELDPRO OVERVIEW</span>
+                        <h2>Service Requests</h2>
+                    </div>
+                    <span class="home-preview-icon">
+                        <i class="fa-solid fa-clipboard-check"></i>
+                    </span>
+                </div>
+
+                <div class="home-preview-item">
+                    <span class="home-service-icon blue">
+                        <i class="fa-solid fa-snowflake"></i>
+                    </span>
+                    <div class="home-service-info">
+                        <strong>AC Maintenance</strong>
+                        <small>Request #FSR-0001</small>
+                    </div>
+                    <span class="home-demo-status new">New</span>
+                </div>
+
+                <div class="home-preview-item">
+                    <span class="home-service-icon purple">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                    </span>
+                    <div class="home-service-info">
+                        <strong>Washing Machine Repair</strong>
+                        <small>Request #FSR-0002</small>
+                    </div>
+                    <span class="home-demo-status assigned">Assigned</span>
+                </div>
+
+                <div class="home-preview-item">
+                    <span class="home-service-icon green">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </span>
+                    <div class="home-service-info">
+                        <strong>Refrigerator Service</strong>
+                        <small>Request #FSR-0003</small>
+                    </div>
+                    <span class="home-demo-status completed">Completed</span>
+                </div>
+
+                <p class="home-preview-note">
+                    <i class="fa-solid fa-circle-info"></i>
+                    Illustrative examples — not live request data.
+                </p>
+            </div>
+        </section>
+
+        <section class="home-features" id="features">
+            <div class="home-section-heading">
+                <span>WHAT FIELDPRO OFFERS</span>
+                <h2>Everything your service workflow needs</h2>
+                <p>Purpose-built tools for every role in the service process.</p>
+            </div>
+
+            <div class="home-feature-grid">
+                <article class="home-feature-card">
+                    <span class="home-feature-icon blue">
+                        <i class="fa-solid fa-user-group"></i>
+                    </span>
+                    <h3>Customer Management</h3>
+                    <p>Create service requests, manage profile information and track request progress.</p>
+                </article>
+
+                <article class="home-feature-card">
+                    <span class="home-feature-icon purple">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                    </span>
+                    <h3>Technician Management</h3>
+                    <p>View assigned jobs and update service status as work progresses.</p>
+                </article>
+
+                <article class="home-feature-card">
+                    <span class="home-feature-icon green">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </span>
+                    <h3>Manager Control</h3>
+                    <p>Monitor service requests and assign technicians through the workflow.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="home-cta">
+            <h2>Ready to manage service requests?</h2>
+            <p>Sign in to your account or create one to get started.</p>
+            <a href="{% url 'register' %}" class="home-primary-btn">
+                Create Your Account <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </section>
+    </main>
+
+    <footer class="home-footer">
+        <a href="{% url 'home' %}" class="home-logo">
+            <span class="home-logo-icon"><i class="fa-solid fa-bolt"></i></span>
+            <span>Field<span>Pro</span></span>
+        </a>
+        <p>© 2026 FieldPro · Field Service Management System</p>
+    </footer>
+
+</body>
+</html>

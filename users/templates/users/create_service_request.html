@@ -1,0 +1,192 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Service Request | FieldPro</title>
+
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon"><i class="fa-solid fa-bolt"></i></div>
+            <div>
+                <h2>Field<span>Pro</span></h2>
+                <small>Service Management</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <p class="nav-title">MAIN</p>
+
+            <a href="{% url 'dashboard' %}" class="nav-link">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{% url 'my_service_requests' %}" class="nav-link">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>My Requests</span>
+            </a>
+
+            <a href="{% url 'create_service_request' %}" class="nav-link active">
+                <i class="fa-solid fa-plus"></i>
+                <span>New Request</span>
+            </a>
+
+            <p class="nav-title">ACCOUNT</p>
+
+            <a href="{% url 'customer_profile' %}" class="nav-link">
+                <i class="fa-solid fa-user"></i>
+                <span>My Profile</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="{% url 'logout' %}" class="nav-link logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <p class="breadcrumb">Services / New Request</p>
+                <h1>Create Service Request</h1>
+            </div>
+
+            <div class="user-area">
+                <div class="user-avatar">{{ user.username|first|upper }}</div>
+                <div class="user-info">
+                    <strong>{{ user.username }}</strong>
+                    <span>Customer</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-content request-form-page">
+
+            <div class="form-intro">
+                <div class="form-intro-icon">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                </div>
+                <div>
+                    <p class="welcome-label">SERVICE SUPPORT</p>
+                    <h2>Tell us what needs fixing</h2>
+                    <p>Provide the details below so our team can review your request.</p>
+                </div>
+            </div>
+
+            {% if error_message %}
+                <div class="form-alert form-alert-error" role="alert">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <p>{{ error_message }}</p>
+                </div>
+            {% endif %}
+
+            {% if success_message %}
+                <div class="form-alert form-alert-success" role="status">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <p>{{ success_message }}</p>
+                </div>
+            {% endif %}
+
+            <div class="request-form-card">
+                <div class="form-card-heading">
+                    <div>
+                        <h2>Request details</h2>
+                        <p>Fields marked with * are required.</p>
+                    </div>
+                    <span class="form-step-label">
+                        <i class="fa-regular fa-clipboard"></i> New request
+                    </span>
+                </div>
+
+                <form method="POST" class="service-request-form">
+                    {% csrf_token %}
+
+                    <div class="form-field">
+                        <label for="request-title">Problem title <span>*</span></label>
+                        <input
+                            id="request-title"
+                            type="text"
+                            name="title"
+                            value="{{ title|default:'' }}"
+                            placeholder="e.g. Air conditioner is not cooling"
+                            maxlength="200"
+                            autocomplete="off"
+                            required
+                        >
+                        <small>Give your problem a short, clear title.</small>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="request-description">Problem description <span>*</span></label>
+                        <textarea
+                            id="request-description"
+                            name="description"
+                            rows="5"
+                            placeholder="Describe the issue and any useful details..."
+                            required
+                        >{{ description|default:'' }}</textarea>
+                        <small>Explain what happened and what support you need.</small>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="request-address">Service address <span>*</span></label>
+                        <textarea
+                            id="request-address"
+                            name="address"
+                            rows="3"
+                            placeholder="Enter the complete address where service is required"
+                            required
+                        >{{ address|default:'' }}</textarea>
+                        <small>Include the area, city and other useful location details.</small>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="request-priority">Priority <span>*</span></label>
+                        <select id="request-priority" name="priority" required>
+                            <option value="">Select request priority</option>
+                            <option value="LOW" {% if priority == "LOW" %}selected{% endif %}>Low</option>
+                            <option value="MEDIUM" {% if priority == "MEDIUM" %}selected{% endif %}>Medium</option>
+                            <option value="HIGH" {% if priority == "HIGH" %}selected{% endif %}>High</option>
+                            <option value="URGENT" {% if priority == "URGENT" %}selected{% endif %}>Urgent</option>
+                        </select>
+                        <small>Select the priority that best describes the issue.</small>
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="{% url 'dashboard' %}" class="form-cancel-btn">
+                            Cancel
+                        </a>
+                        <button type="submit" class="form-submit-btn">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            Create Service Request
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-help-card">
+                <i class="fa-solid fa-circle-info"></i>
+                <div>
+                    <h3>What happens next?</h3>
+                    <p>Your request will be reviewed by the service team. A technician can be assigned according to the request workflow.</p>
+                </div>
+            </div>
+
+        </section>
+    </main>
+</div>
+</body>
+</html>

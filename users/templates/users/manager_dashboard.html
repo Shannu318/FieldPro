@@ -1,0 +1,730 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manager Dashboard | FieldPro</title>
+
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* Manager dashboard enhancements only */
+        .manager-dashboard-page {
+            min-width: 0;
+        }
+
+        .manager-dashboard-page .section-header {
+            scroll-margin-top: 100px;
+        }
+
+        .manager-dashboard-page .request-management-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin: 22px 0;
+        }
+
+        .manager-dashboard-page .request-search {
+            position: relative;
+            flex: 1 1 260px;
+            max-width: 430px;
+        }
+
+        .manager-dashboard-page .request-search i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            pointer-events: none;
+        }
+
+        .manager-dashboard-page .request-search input {
+            width: 100%;
+            min-height: 46px;
+            padding: 12px 15px 12px 43px;
+            border: 1px solid #dbe3ee;
+            border-radius: 12px;
+            background: #fff;
+            color: #0f172a;
+            font: inherit;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .manager-dashboard-page .request-search input:focus,
+        .manager-dashboard-page .request-filter:focus {
+            border-color: #647df5;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, .12);
+        }
+
+        .manager-dashboard-page .request-filter {
+            min-height: 46px;
+            min-width: 175px;
+            padding: 10px 14px;
+            border: 1px solid #dbe3ee;
+            border-radius: 12px;
+            background: #fff;
+            color: #334155;
+            font: inherit;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .manager-dashboard-page .request-results-count {
+            margin: 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .manager-dashboard-page .request-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .manager-dashboard-page .request-card {
+            min-width: 0;
+            padding: 22px;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(15, 23, 42, .035);
+            transition: transform .2s, box-shadow .2s, border-color .2s;
+        }
+
+        .manager-dashboard-page .request-card:hover {
+            transform: translateY(-3px);
+            border-color: #c7d2fe;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, .08);
+        }
+
+        .manager-dashboard-page .request-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .manager-dashboard-page .request-card-top > div {
+            min-width: 0;
+        }
+
+        .manager-dashboard-page .request-number {
+            display: inline-block;
+            margin-bottom: 8px;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .08em;
+        }
+
+        .manager-dashboard-page .request-card-top h3 {
+            margin: 0;
+            color: #0f172a;
+            font-size: 17px;
+            line-height: 1.45;
+            overflow-wrap: anywhere;
+        }
+
+        .manager-dashboard-page .request-status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            padding: 7px 10px;
+            border-radius: 999px;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .manager-dashboard-page .status-new {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .manager-dashboard-page .status-assigned {
+            background: #f5f3ff;
+            color: #6d28d9;
+        }
+
+        .manager-dashboard-page .status-in_progress {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .manager-dashboard-page .status-completed {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .manager-dashboard-page .status-cancelled {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .manager-dashboard-page .request-details {
+            display: grid;
+            gap: 14px;
+            padding: 17px 0;
+            border-top: 1px solid #f1f5f9;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .manager-dashboard-page .request-detail {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            min-width: 0;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .manager-dashboard-page .request-detail > i {
+            width: 17px;
+            margin-top: 3px;
+            color: #64748b;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .manager-dashboard-page .request-detail strong {
+            color: #334155;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .manager-dashboard-page .priority {
+            font-weight: 700;
+        }
+
+        .manager-dashboard-page .priority-high {
+            color: #dc2626;
+        }
+
+        .manager-dashboard-page .priority-medium {
+            color: #d97706;
+        }
+
+        .manager-dashboard-page .priority-low {
+            color: #059669;
+        }
+
+        .manager-dashboard-page .request-card-footer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .manager-dashboard-page .request-card-footer a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 40px;
+            padding: 10px 13px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            transition: background .2s, transform .2s;
+            box-sizing: border-box;
+        }
+
+        .manager-dashboard-page .request-details-btn {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .manager-dashboard-page .request-details-btn:hover {
+            background: #dbeafe;
+        }
+
+        .manager-dashboard-page .request-card-footer .create-request-btn {
+            background: #4f46e5;
+            color: #fff;
+        }
+
+        .manager-dashboard-page .request-card-footer .create-request-btn:hover {
+            background: #4338ca;
+        }
+
+        .manager-dashboard-page .request-card-footer a:hover {
+            transform: translateY(-1px);
+        }
+
+        .manager-dashboard-page .requests-empty {
+            padding: 42px 20px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 16px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .manager-dashboard-page .requests-empty .empty-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 58px;
+            height: 58px;
+            margin-bottom: 14px;
+            border-radius: 16px;
+            background: #eff6ff;
+            color: #4f46e5;
+            font-size: 23px;
+        }
+
+        .manager-dashboard-page .requests-empty h3 {
+            margin: 0 0 8px;
+            color: #0f172a;
+        }
+
+        .manager-dashboard-page .requests-empty p {
+            margin: 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .manager-dashboard-page .filter-empty {
+            display: none;
+            padding: 25px;
+            color: #64748b;
+            text-align: center;
+        }
+
+        .sidebar-nav .nav-link.active {
+            background: rgba(99, 102, 241, .15);
+            color: #818cf8;
+        }
+
+        .sidebar-nav .nav-link.active i {
+            color: inherit;
+        }
+
+        @media (max-width: 1100px) {
+            .manager-dashboard-page .request-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .manager-dashboard-page .request-management-toolbar {
+                align-items: stretch;
+            }
+
+            .manager-dashboard-page .request-search {
+                max-width: none;
+                flex-basis: 100%;
+            }
+
+            .manager-dashboard-page .request-filter {
+                width: 100%;
+            }
+
+            .manager-dashboard-page .request-card {
+                padding: 17px;
+                border-radius: 14px;
+            }
+
+            .manager-dashboard-page .request-card-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .manager-dashboard-page .request-card-footer {
+                flex-direction: column;
+            }
+
+            .manager-dashboard-page .request-card-footer a {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div>
+                <h2>Field<span>Pro</span></h2>
+                <small>Service Management</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <p class="nav-title">MANAGEMENT</p>
+
+            <a href="{% url 'manager_dashboard' %}"
+               class="nav-link active"
+               id="dashboard-nav-link">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{% url 'manager_technicians' %}" class="nav-link">
+                <i class="fa-solid fa-users"></i>
+                <span>Technicians</span>
+            </a>
+
+            <a href="{% url 'manager_dashboard' %}#service-requests"
+               class="nav-link"
+               id="service-requests-nav-link">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>Service Requests</span>
+            </a>
+
+            <p class="nav-title">ACCOUNT</p>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="{% url 'logout' %}" class="nav-link logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <p class="breadcrumb">Management</p>
+                <h1>Manager Dashboard</h1>
+            </div>
+
+            <div class="user-area">
+                <div class="user-avatar">
+                    {{ user.username|first|upper }}
+                </div>
+                <div class="user-info">
+                    <strong>{{ user.username }}</strong>
+                    <span>Manager</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-content manager-dashboard-page">
+
+            <div class="welcome-card">
+                <div>
+                    <p class="welcome-label">OPERATIONS OVERVIEW</p>
+                    <h2>
+                        Welcome back,
+                        {{ user.first_name|default:user.username }} 👋
+                    </h2>
+                    <p>
+                        Review service requests and coordinate technician
+                        assignments.
+                    </p>
+                </div>
+
+                <div class="welcome-icon">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                </div>
+            </div>
+
+            <!-- Dashboard statistics -->
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </div>
+                    <div>
+                        <span>Total Requests</span>
+                        <h3>{{ total_requests }}</h3>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fa-solid fa-user-clock"></i>
+                    </div>
+                    <div>
+                        <span>Needs Assignment</span>
+                        <h3>{{ unassigned_count }}</h3>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fa-solid fa-spinner"></i>
+                    </div>
+                    <div>
+                        <span>In Progress</span>
+                        <h3>{{ in_progress_count }}</h3>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div>
+                        <span>Active Technicians</span>
+                        <h3>{{ active_technicians }}</h3>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Service requests management -->
+            <div class="section-header" id="service-requests">
+                <div>
+                    <h2>All Service Requests</h2>
+                    <p>
+                        Review requests, track progress, and manage technician
+                        assignments.
+                    </p>
+                </div>
+            </div>
+
+            {% if service_requests %}
+
+                <div class="request-management-toolbar">
+
+                    <div class="request-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input
+                            type="search"
+                            id="request-search"
+                            placeholder="Search requests, customers, technicians..."
+                            aria-label="Search service requests"
+                        >
+                    </div>
+
+                    <select
+                        id="request-status-filter"
+                        class="request-filter"
+                        aria-label="Filter service requests by status"
+                    >
+                        <option value="all">All statuses</option>
+                        <option value="new">New</option>
+                        <option value="assigned">Assigned</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+
+                    <p class="request-results-count" id="request-results-count"
+                       aria-live="polite">
+                        {{ service_requests|length }} request{{ service_requests|length|pluralize }}
+                    </p>
+
+                </div>
+
+                <div class="request-list" id="request-list">
+
+                    {% for service_request in service_requests %}
+
+                        <article
+                            class="request-card"
+                            data-status="{{ service_request.status|lower }}"
+                            data-search="{{ service_request.id }} {{ service_request.title|lower }} {{ service_request.customer.username|lower }} {{ service_request.technician.username|default:''|lower }} {{ service_request.priority|lower }}"
+                        >
+
+                            <div class="request-card-top">
+                                <div>
+                                    <span class="request-number">
+                                        FSR-{{ service_request.id|stringformat:"04d" }}
+                                    </span>
+                                    <h3>{{ service_request.title }}</h3>
+                                </div>
+
+                                <span class="request-status status-{{ service_request.status|lower }}">
+                                    {{ service_request.get_status_display }}
+                                </span>
+                            </div>
+
+                            <div class="request-details">
+
+                                <div class="request-detail">
+                                    <i class="fa-solid fa-user"></i>
+                                    <span>
+                                        Customer:
+                                        <strong>{{ service_request.customer.username }}</strong>
+                                    </span>
+                                </div>
+
+                                <div class="request-detail">
+                                    <i class="fa-solid fa-flag"></i>
+                                    <span>
+                                        <span class="priority priority-{{ service_request.priority|lower }}">
+                                            {{ service_request.get_priority_display }} Priority
+                                        </span>
+                                    </span>
+                                </div>
+
+                                <div class="request-detail">
+                                    <i class="fa-solid fa-user-gear"></i>
+                                    <span>
+                                        Technician:
+                                        <strong>
+                                            {% if service_request.technician %}
+                                                {{ service_request.technician.username }}
+                                            {% else %}
+                                                Not assigned
+                                            {% endif %}
+                                        </strong>
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div class="request-card-footer">
+
+                                <a
+                                    href="{% url 'manager_service_request_detail' service_request.id %}"
+                                    class="request-details-btn"
+                                >
+                                    <i class="fa-regular fa-eye"></i>
+                                    View Details
+                                </a>
+
+                                {% if service_request.status == "NEW" or service_request.status == "ASSIGNED" %}
+                                    <a
+                                        href="{% url 'assign_service_request' service_request.id %}"
+                                        class="create-request-btn"
+                                    >
+                                        <i class="fa-solid fa-user-gear"></i>
+                                        {% if service_request.technician %}
+                                            Reassign Technician
+                                        {% else %}
+                                            Assign Technician
+                                        {% endif %}
+                                    </a>
+                                {% endif %}
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+                <div class="filter-empty" id="filter-empty">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <p>No requests match your search or selected status.</p>
+                </div>
+
+            {% else %}
+
+                <div class="requests-empty">
+                    <div class="empty-icon">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </div>
+                    <h3>No service requests found</h3>
+                    <p>New customer requests will appear here.</p>
+                </div>
+
+            {% endif %}
+
+        </section>
+    </main>
+</div>
+
+<script>
+    // Highlight the correct sidebar item based on the URL fragment.
+    const dashboardLink = document.getElementById("dashboard-nav-link");
+    const serviceRequestsLink = document.getElementById(
+        "service-requests-nav-link"
+    );
+    const serviceRequestsSection = document.getElementById("service-requests");
+
+    function updateActiveSidebarLink() {
+        const viewingRequests =
+            window.location.hash === "#service-requests";
+
+        dashboardLink?.classList.toggle("active", !viewingRequests);
+        serviceRequestsLink?.classList.toggle("active", viewingRequests);
+    }
+
+    updateActiveSidebarLink();
+    window.addEventListener("hashchange", updateActiveSidebarLink);
+
+    // Search and filter the existing request cards without reloading.
+    const searchInput = document.getElementById("request-search");
+    const statusFilter = document.getElementById("request-status-filter");
+    const requestCards = Array.from(
+        document.querySelectorAll("#request-list .request-card")
+    );
+    const resultsCount = document.getElementById("request-results-count");
+    const filterEmpty = document.getElementById("filter-empty");
+
+    function filterRequests() {
+        if (!searchInput || !statusFilter) return;
+
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        const selectedStatus = statusFilter.value;
+        let visibleCount = 0;
+
+        requestCards.forEach((card) => {
+            const cardText = card.dataset.search || "";
+            const cardStatus = card.dataset.status || "";
+
+            const matchesSearch = cardText.includes(searchTerm);
+            const matchesStatus =
+                selectedStatus === "all" || cardStatus === selectedStatus;
+
+            const isVisible = matchesSearch && matchesStatus;
+
+            card.hidden = !isVisible;
+
+            if (isVisible) visibleCount++;
+        });
+
+        if (resultsCount) {
+            const noun = visibleCount === 1 ? "request" : "requests";
+            resultsCount.textContent = `${visibleCount} ${noun}`;
+        }
+
+        if (filterEmpty) {
+            filterEmpty.style.display =
+                requestCards.length > 0 && visibleCount === 0
+                    ? "block"
+                    : "none";
+        }
+    }
+
+    searchInput?.addEventListener("input", filterRequests);
+    statusFilter?.addEventListener("change", filterRequests);
+
+    // Navigate to the requests section when its sidebar link is clicked.
+    serviceRequestsLink?.addEventListener("click", () => {
+        updateActiveSidebarLink();
+    });
+
+    if (window.location.hash === "#service-requests") {
+        requestAnimationFrame(() => {
+            serviceRequestsSection?.scrollIntoView({
+                behavior: "auto",
+                block: "start"
+            });
+        });
+    }
+</script>
+
+</body>
+</html>

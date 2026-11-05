@@ -1,0 +1,86 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | FieldPro</title>
+
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body class="auth-page">
+    <div class="auth-container">
+        <main class="auth-card">
+
+            <a href="{% url 'home' %}" class="auth-brand">
+                <span class="auth-brand-icon">
+                    <i class="fa-solid fa-bolt"></i>
+                </span>
+                <span>Field<span class="auth-brand-accent">Pro</span></span>
+            </a>
+
+            <div class="auth-heading">
+                <h1>Welcome back</h1>
+                <p>Sign in to manage and track your service requests.</p>
+            </div>
+
+            {% if error_message %}
+                <div class="form-alert form-alert-error" role="alert">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <p>{{ error_message }}</p>
+                </div>
+            {% endif %}
+
+            {% if success_message %}
+                <div class="form-alert form-alert-success" role="status">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <p>{{ success_message }}</p>
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'login' %}" class="auth-form">
+                {% csrf_token %}
+
+                <div class="auth-field">
+                    <label for="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter your username"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
+
+                <div class="auth-field">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="auth-submit-btn">
+                    Sign In
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <p class="auth-footer">
+                Don't have an account?
+                <a href="{% url 'register' %}">Create an account</a>
+            </p>
+
+        </main>
+    </div>
+</body>
+</html>

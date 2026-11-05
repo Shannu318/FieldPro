@@ -1,0 +1,334 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technician Details | FieldPro</title>
+
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+<div class="app manager-technician-detail-page">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div>
+                <h2>Field<span>Pro</span></h2>
+                <small>Service Management</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <p class="nav-title">MANAGEMENT</p>
+
+            <a href="{% url 'manager_dashboard' %}" class="nav-link">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{% url 'manager_technicians' %}" class="nav-link active">
+                <i class="fa-solid fa-users"></i>
+                <span>Technicians</span>
+            </a>
+
+            <a href="{% url 'manager_dashboard' %}#service-requests"
+               class="nav-link">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>Service Requests</span>
+            </a>
+
+            <p class="nav-title">ACCOUNT</p>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="{% url 'logout' %}" class="nav-link logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Topbar -->
+        <header class="topbar">
+            <div>
+                <p class="breadcrumb">Management / Technicians / Details</p>
+                <h1>Technician Details</h1>
+            </div>
+
+            <div class="user-area">
+                <div class="user-avatar">
+                    {{ user.username|first|upper }}
+                </div>
+                <div class="user-info">
+                    <strong>{{ user.username }}</strong>
+                    <span>Manager</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-content">
+
+            <!-- Back Navigation -->
+            <a href="{% url 'manager_technicians' %}"
+               class="manager-detail-back">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Technicians
+            </a>
+
+            <!-- Technician Profile Banner -->
+            <div class="welcome-card manager-technician-hero">
+                <div>
+                    <p class="welcome-label">TECHNICIAN PROFILE</p>
+
+                    <h2>
+                        {{ technician.get_full_name|default:technician.username }}
+                    </h2>
+
+                    <p>
+                        Review technician account information,
+                        workload and assigned service requests.
+                    </p>
+                </div>
+
+                <div class="welcome-icon">
+                    <i class="fa-solid fa-user-gear"></i>
+                </div>
+            </div>
+
+            <!-- Technician Statistics -->
+            <div class="stats-grid manager-technician-stats">
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </div>
+                    <div>
+                        <span>Total Assigned Requests</span>
+                        <h3>{{ assigned_requests|length }}</h3>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <div>
+                        <span>Open Requests</span>
+                        <h3>{{ open_request_count }}</h3>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <div>
+                        <span>Account Status</span>
+                        <h3 class="manager-account-status">
+                            {% if technician.is_active %}
+                                Active
+                            {% else %}
+                                Inactive
+                            {% endif %}
+                        </h3>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Account Information -->
+            <section class="request-card manager-account-card">
+
+                <div class="manager-detail-section-heading">
+                    <div class="manager-detail-section-icon">
+                        <i class="fa-solid fa-id-card"></i>
+                    </div>
+                    <div>
+                        <h2>Account Information</h2>
+                        <p>Technician profile and contact details.</p>
+                    </div>
+                </div>
+
+                <div class="manager-account-grid">
+
+                    <div class="manager-account-item">
+                        <div class="manager-account-icon">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div>
+                            <span>Full Name</span>
+                            <strong>
+                                {{ technician.get_full_name|default:technician.username }}
+                            </strong>
+                        </div>
+                    </div>
+
+                    <div class="manager-account-item">
+                        <div class="manager-account-icon">
+                            <i class="fa-solid fa-at"></i>
+                        </div>
+                        <div>
+                            <span>Username</span>
+                            <strong>{{ technician.username }}</strong>
+                        </div>
+                    </div>
+
+                    <div class="manager-account-item">
+                        <div class="manager-account-icon">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div>
+                            <span>Email Address</span>
+                            <strong>
+                                {{ technician.email|default:"Not provided" }}
+                            </strong>
+                        </div>
+                    </div>
+
+                    <div class="manager-account-item">
+                        <div class="manager-account-icon">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div>
+                            <span>Phone Number</span>
+                            <strong>
+                                {{ technician.phone|default:"Not provided" }}
+                            </strong>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="manager-technician-id">
+                    <i class="fa-solid fa-fingerprint"></i>
+                    Technician ID:
+                    <strong>TECH-{{ technician.id|stringformat:"04d" }}</strong>
+                </div>
+
+            </section>
+
+            <!-- Assigned Requests Heading -->
+            <div class="section-header manager-assigned-heading">
+                <div>
+                    <h2>Assigned Service Requests</h2>
+                    <p>
+                        Requests currently or previously assigned to this technician.
+                    </p>
+                </div>
+
+                <span class="manager-request-count">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    {{ assigned_requests|length }} request{{ assigned_requests|length|pluralize }}
+                </span>
+            </div>
+
+            <!-- Assigned Requests -->
+            {% if assigned_requests %}
+                <div class="request-list manager-assigned-list">
+
+                    {% for service_request in assigned_requests %}
+                        <article class="request-card manager-assigned-card">
+
+                            <div class="request-card-top">
+                                <div>
+                                    <span class="request-number">
+                                        FSR-{{ service_request.id|stringformat:"04d" }}
+                                    </span>
+
+                                    <h3>{{ service_request.title }}</h3>
+                                </div>
+
+                                <span class="request-status status-{{ service_request.status|lower }}">
+                                    {{ service_request.get_status_display }}
+                                </span>
+                            </div>
+
+                            <div class="manager-assigned-details">
+
+                                <div class="manager-assigned-detail">
+                                    <i class="fa-solid fa-user"></i>
+                                    <div>
+                                        <span>Customer</span>
+                                        <strong>{{ service_request.customer.username }}</strong>
+                                    </div>
+                                </div>
+
+                                <div class="manager-assigned-detail">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <div>
+                                        <span>Service Address</span>
+                                        <strong>{{ service_request.address }}</strong>
+                                    </div>
+                                </div>
+
+                                <div class="manager-assigned-detail">
+                                    <i class="fa-solid fa-flag"></i>
+                                    <div>
+                                        <span>Priority</span>
+                                        <strong class="priority priority-{{ service_request.priority|lower }}">
+                                            {{ service_request.get_priority_display }}
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <div class="manager-assigned-detail">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    <div>
+                                        <span>Date Created</span>
+                                        <strong>
+                                            {{ service_request.created_at|date:"d M Y, h:i A" }}
+                                        </strong>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="request-card-footer">
+                                <a href="{% url 'manager_service_request_detail' service_request.id %}"
+                                   class="request-details-btn">
+                                    <i class="fa-regular fa-eye"></i>
+                                    View Request Details
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </div>
+
+                        </article>
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+                <div class="requests-empty manager-no-requests">
+                    <div class="empty-icon">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </div>
+                    <h3>No assigned requests</h3>
+                    <p>
+                        This technician has no service requests assigned
+                        to their account yet.
+                    </p>
+                    <a href="{% url 'manager_dashboard' %}#service-requests"
+                       class="request-details-btn">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Browse Service Requests
+                    </a>
+                </div>
+            {% endif %}
+
+        </section>
+    </main>
+</div>
+</body>
+</html>

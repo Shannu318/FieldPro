@@ -1,0 +1,210 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technicians | FieldPro</title>
+
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="app manager-technicians-page">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div>
+                <h2>Field<span>Pro</span></h2>
+                <small>Service Management</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <p class="nav-title">MANAGEMENT</p>
+
+            <a href="{% url 'manager_dashboard' %}" class="nav-link">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{% url 'manager_technicians' %}" class="nav-link active">
+                <i class="fa-solid fa-users"></i>
+                <span>Technicians</span>
+            </a>
+
+            <a href="{% url 'manager_dashboard' %}" class="nav-link">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>Service Requests</span>
+            </a>
+
+            <p class="nav-title">ACCOUNT</p>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="{% url 'logout' %}" class="nav-link logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <p class="breadcrumb">Management / Technicians</p>
+                <h1>Technicians</h1>
+            </div>
+
+            <div class="user-area">
+                <div class="user-avatar">
+                    {{ user.username|first|upper }}
+                </div>
+                <div class="user-info">
+                    <strong>{{ user.username }}</strong>
+                    <span>Manager</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-content">
+
+            <div class="welcome-card">
+                <div>
+                    <p class="welcome-label">TEAM MANAGEMENT</p>
+                    <h2>Technician Directory</h2>
+                    <p>Review technician accounts and their current workloads.</p>
+                </div>
+                <div class="welcome-icon">
+                    <i class="fa-solid fa-people-group"></i>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div>
+                        <span>Total Technicians</span>
+                        <h3>{{ total_technicians }}</h3>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <div>
+                        <span>Active Accounts</span>
+                        <h3>{{ active_technicians }}</h3>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </div>
+                    <div>
+                        <span>Inactive Accounts</span>
+                        <h3>{{ inactive_technicians }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <div>
+                    <h2>All Technicians</h2>
+                    <p>View account status and open assigned requests.</p>
+                </div>
+            </div>
+
+            {% if technicians %}
+                <div class="request-list">
+                    {% for technician in technicians %}
+                        <article class="request-card">
+
+                            <div class="request-card-top">
+                                <div>
+                                    <span class="request-number">
+                                        TECH-{{ technician.id|stringformat:"04d" }}
+                                    </span>
+                                    <h3>{{ technician.get_full_name|default:technician.username }}</h3>
+                                </div>
+
+                                {% if technician.is_active %}
+                                    <span class="request-status status-completed">
+                                        Active
+                                    </span>
+                                {% else %}
+                                    <span class="request-status status-cancelled">
+                                        Inactive
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <div class="request-details">
+                                <div class="request-detail">
+                                    <i class="fa-solid fa-at"></i>
+                                    <span>
+                                        Username:
+                                        <strong>{{ technician.username }}</strong>
+                                    </span>
+                                </div>
+
+                                <div class="request-detail">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <span>
+                                        Email:
+                                        <strong>{{ technician.email|default:"Not provided" }}</strong>
+                                    </span>
+                                </div>
+
+                                <div class="request-detail">
+                                    <i class="fa-solid fa-phone"></i>
+                                    <span>
+                                        Phone:
+                                        <strong>{{ technician.phone|default:"Not provided" }}</strong>
+                                    </span>
+                                </div>
+
+                                <div class="request-detail">
+                                    <i class="fa-solid fa-list-check"></i>
+                                    <span>
+                                        Open Requests:
+                                        <strong>{{ technician.open_request_count }}</strong>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="request-card-footer">
+                                <a href="{% url 'manager_technician_detail' technician.id %}"
+                                   class="request-details-btn">
+                                    <i class="fa-regular fa-eye"></i>
+                                    View Technician
+                                </a>
+                            </div>
+
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="requests-empty">
+                    <div class="empty-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <h3>No technicians found</h3>
+                    <p>Technician accounts will appear here when available.</p>
+                </div>
+            {% endif %}
+
+        </section>
+    </main>
+</div>
+</body>
+</html>

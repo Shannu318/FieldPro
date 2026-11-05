@@ -1,0 +1,158 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Details | FieldPro</title>
+
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon"><i class="fa-solid fa-bolt"></i></div>
+            <div>
+                <h2>Field<span>Pro</span></h2>
+                <small>Service Management</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <p class="nav-title">WORKSPACE</p>
+            <a href="{% url 'technician_dashboard' %}" class="nav-link">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <p class="nav-title">ACCOUNT</p>
+            <a href="{% url 'logout' %}" class="nav-link logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <p class="breadcrumb">Workspace / Request Details</p>
+                <h1>Service Request Details</h1>
+            </div>
+
+            <div class="user-area">
+                <div class="user-avatar">{{ user.username|first|upper }}</div>
+                <div class="user-info">
+                    <strong>{{ user.username }}</strong>
+                    <span>Technician</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-content">
+
+            <div class="requests-heading">
+                <div>
+                    <h2>FSR-{{ service_request.id|stringformat:"04d" }}</h2>
+                    <p>Review the job information and update its status.</p>
+                </div>
+                <a href="{% url 'technician_dashboard' %}" class="request-details-btn">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+
+            <article class="request-card">
+                <div class="request-card-top">
+                    <div>
+                        <span class="request-number">
+                            Request #FSR-{{ service_request.id|stringformat:"04d" }}
+                        </span>
+                        <h3>{{ service_request.title }}</h3>
+                    </div>
+
+                    <span class="request-status status-{{ service_request.status|lower }}">
+                        {{ service_request.get_status_display }}
+                    </span>
+                </div>
+
+                <p class="request-description">
+                    {{ service_request.description }}
+                </p>
+
+                <div class="request-details">
+                    <div class="request-detail">
+                        <i class="fa-solid fa-user"></i>
+                        <span>Customer: {{ service_request.customer.username }}</span>
+                    </div>
+
+                    <div class="request-detail">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Address: {{ service_request.address }}</span>
+                    </div>
+
+                    <div class="request-detail">
+                        <i class="fa-solid fa-flag"></i>
+                        <span>Priority: {{ service_request.get_priority_display }}</span>
+                    </div>
+
+                    <div class="request-detail">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span>Created: {{ service_request.created_at|date:"d M Y, h:i A" }}</span>
+                    </div>
+
+                    <div class="request-detail">
+                        <i class="fa-regular fa-clock"></i>
+                        <span>Last Updated: {{ service_request.updated_at|date:"d M Y, h:i A" }}</span>
+                    </div>
+                </div>
+            </article>
+
+            <div class="section-header">
+                <div>
+                    <h2>Update Job Status</h2>
+                    <p>Move the request to its next permitted stage.</p>
+                </div>
+            </div>
+
+            {% if service_request.status == "ASSIGNED" or service_request.status == "IN_PROGRESS" %}
+                <article class="request-card">
+                    <form method="POST"
+                          action="{% url 'update_service_request_status' service_request.id %}">
+                        {% csrf_token %}
+
+                        <label for="status">New status</label>
+                        <select name="status" id="status" class="form-select" required>
+                            {% if service_request.status == "ASSIGNED" %}
+                                <option value="IN_PROGRESS">In Progress</option>
+                            {% elif service_request.status == "IN_PROGRESS" %}
+                                <option value="COMPLETED">Completed</option>
+                            {% endif %}
+                        </select>
+
+                        <div class="form-actions">
+                            <button type="submit" class="request-details-btn">
+                                <i class="fa-solid fa-check"></i> Update Status
+                            </button>
+                        </div>
+                    </form>
+                </article>
+            {% else %}
+                <article class="requests-empty">
+                    <div class="empty-icon">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <h3>This request is closed</h3>
+                    <p>Status: {{ service_request.get_status_display }}. No further updates are available.</p>
+                </article>
+            {% endif %}
+
+        </section>
+    </main>
+</div>
+</body>
+</html>

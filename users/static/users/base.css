@@ -1,0 +1,25 @@
+/* ==================================================
+   FIELDPRO — BASE STYLES
+   Purpose: Global defaults, typography and links.
+   Keep shared foundational styles in this file.
+   ================================================== */
+
+/* Use consistent sizing across all elements. */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Shared application typography and page colors. */
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+/* Shared link appearance. */
+a {
+    text-decoration: none;
+    color: inherit;
+}

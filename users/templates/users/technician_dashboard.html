@@ -1,0 +1,141 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technician Dashboard | FieldPro</title>
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon"><i class="fa-solid fa-bolt"></i></div>
+            <div>
+                <h2>Field<span>Pro</span></h2>
+                <small>Service Management</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <p class="nav-title">WORKSPACE</p>
+            <a href="{% url 'technician_dashboard' %}" class="nav-link active">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span>Dashboard</span>
+            </a>
+            <p class="nav-title">ACCOUNT</p>
+            <a href="{% url 'logout' %}" class="nav-link logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <p class="breadcrumb">Workspace</p>
+                <h1>Technician Dashboard</h1>
+            </div>
+            <div class="user-area">
+                <div class="user-avatar">{{ user.username|first|upper }}</div>
+                <div class="user-info">
+                    <strong>{{ user.username }}</strong>
+                    <span>Technician</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-content">
+            <div class="welcome-card">
+                <div>
+                    <p class="welcome-label">YOUR WORKSPACE</p>
+                    <h2>Hello, {{ user.first_name|default:user.username }} 👋</h2>
+                    <p>View your assigned service requests and keep work statuses up to date.</p>
+                </div>
+                <div class="welcome-icon">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </div>
+                    <div>
+                        <span>Assigned Requests</span>
+                        <h3>{{ assigned_requests|length }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <div>
+                    <h2>My Assigned Requests</h2>
+                    <p>Service jobs currently assigned to you.</p>
+                </div>
+            </div>
+
+            {% if assigned_requests %}
+                <div class="request-list">
+                    {% for service_request in assigned_requests %}
+                        <article class="request-card">
+                            <div class="request-card-top">
+                                <div>
+                                    <span class="request-number">
+                                        FSR-{{ service_request.id|stringformat:"04d" }}
+                                    </span>
+                                    <h3>{{ service_request.title }}</h3>
+                                </div>
+                                <span class="request-status status-{{ service_request.status|lower }}">
+                                    {{ service_request.get_status_display }}
+                                </span>
+                            </div>
+
+                            <div class="request-details">
+                                <div>
+                                    <!-- <i class="fa-solid fa-user"></i> -->
+                                    <span>Customer</span>
+                                    <strong>{{ service_request.customer.username }}</strong>
+                                </div>
+                                <div>
+                                    <span>Priority</span>
+                                    <strong>{{ service_request.get_priority_display }}</strong>
+                                </div>
+                                <div>
+                                    <span>Address</span>
+                                    <strong>{{ service_request.address }}</strong>
+                                </div>
+                                <div>
+                                    <span>Created</span>
+                                    <strong>{{ service_request.created_at|date:"d M Y, h:i A" }}</strong>
+                                </div>
+                            </div>
+
+                            <div class="request-card-footer">
+                                <a class="request-details-btn"
+                                   href="{% url 'technician_service_request_detail' service_request.id %}">
+                                    <i class="fa-regular fa-eye"></i> View Request Details
+                                </a>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="requests-empty">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    <h3>No assigned requests</h3>
+                    <p>New jobs will appear here when a manager assigns them to you.</p>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,200 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | FieldPro</title>
+
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+<div class="app">
+
+    <!-- CUSTOMER SIDEBAR: Keep navigation consistent with the dashboard -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div>
+                <h2>Field<span>Pro</span></h2>
+                <small>Service Management</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <p class="nav-title">MAIN</p>
+
+            <a href="{% url 'dashboard' %}" class="nav-link"
+               title="Dashboard" aria-label="Dashboard">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{% url 'my_service_requests' %}" class="nav-link"
+               title="My Requests" aria-label="My Requests">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>My Requests</span>
+            </a>
+
+            <a href="{% url 'create_service_request' %}" class="nav-link"
+               title="New Request" aria-label="New Request">
+                <i class="fa-solid fa-plus"></i>
+                <span>New Request</span>
+            </a>
+
+            <p class="nav-title">ACCOUNT</p>
+
+            <a href="{% url 'customer_profile' %}"
+               class="nav-link active"
+               title="My Profile" aria-label="My Profile">
+                <i class="fa-solid fa-user"></i>
+                <span>My Profile</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="{% url 'logout' %}" class="nav-link logout"
+               title="Logout" aria-label="Logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <p class="breadcrumb">Account / My Profile</p>
+                <h1>My Profile</h1>
+            </div>
+
+            <div class="user-area">
+                <div class="user-avatar">
+                    {{ user.username|first|upper }}
+                </div>
+                <div class="user-info">
+                    <strong>{{ user.username }}</strong>
+                    <span>Customer</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-content profile-page">
+
+            <!-- PROFILE INTRODUCTION -->
+            <div class="profile-heading">
+                <div class="profile-heading-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div>
+                    <p class="profile-eyebrow">ACCOUNT SETTINGS</p>
+                    <h2>
+                        {{ user.first_name|default:user.username }}
+                    </h2>
+                    <p>Manage your personal service address and details.</p>
+                </div>
+            </div>
+
+            <!-- STATUS MESSAGES -->
+            {% if error_message %}
+                <div class="profile-alert profile-alert-error" role="alert">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span>{{ error_message }}</span>
+                </div>
+            {% endif %}
+
+            {% if success_message %}
+                <div class="profile-alert profile-alert-success" role="status">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>{{ success_message }}</span>
+                </div>
+            {% endif %}
+
+            <!-- PROFILE FORM -->
+            <div class="profile-card">
+                <div class="profile-card-heading">
+                    <div class="profile-section-icon">
+                        <i class="fa-solid fa-address-card"></i>
+                    </div>
+                    <div>
+                        <h3>Contact & Address</h3>
+                        <p>Keep your service location details up to date.</p>
+                    </div>
+                </div>
+
+                <div class="profile-account-row">
+                    <span class="profile-account-label">Username</span>
+                    <strong>{{ user.username }}</strong>
+                </div>
+
+                <form method="POST" class="profile-form">
+                    {% csrf_token %}
+
+                    <div class="profile-field profile-field-full">
+                        <label for="profile-address">Address</label>
+                        <textarea
+                            id="profile-address"
+                            name="address"
+                            rows="4"
+                            placeholder="Enter your full address"
+                            required>{% if profile %}{{ profile.address }}{% endif %}</textarea>
+                    </div>
+
+                    <div class="profile-form-grid">
+                        <div class="profile-field">
+                            <label for="profile-city">City</label>
+                            <input
+                                id="profile-city"
+                                type="text"
+                                name="city"
+                                value="{% if profile %}{{ profile.city }}{% endif %}"
+                                placeholder="Enter your city"
+                                required>
+                        </div>
+
+                        <div class="profile-field">
+                            <label for="profile-state">State</label>
+                            <input
+                                id="profile-state"
+                                type="text"
+                                name="state"
+                                value="{% if profile %}{{ profile.state }}{% endif %}"
+                                placeholder="Enter your state"
+                                required>
+                        </div>
+
+                        <div class="profile-field profile-field-full">
+                            <label for="profile-zip">ZIP Code</label>
+                            <input
+                                id="profile-zip"
+                                type="text"
+                                name="zip_code"
+                                value="{% if profile %}{{ profile.zip_code }}{% endif %}"
+                                placeholder="Enter your ZIP Code"
+                                autocomplete="postal-code"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="profile-form-actions">
+                        <button type="submit" class="profile-save-button">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            Save Profile
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </section>
+    </main>
+</div>
+</body>
+</html>

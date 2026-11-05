@@ -1,0 +1,155 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | FieldPro</title>
+
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="auth-page">
+
+<div class="auth-container">
+    <div class="auth-card">
+
+        <a href="{% url 'login' %}" class="auth-brand">
+            <span class="auth-brand-icon">
+                <i class="fa-solid fa-bolt"></i>
+            </span>
+            <span>Field<span class="auth-brand-accent">Pro</span></span>
+        </a>
+
+        <div class="auth-heading">
+            <h1>Create your account</h1>
+            <p>Register to manage and track your service requests.</p>
+        </div>
+
+        {% if error_message %}
+            <div class="form-alert form-alert-error" role="alert">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <p>{{ error_message }}</p>
+            </div>
+        {% endif %}
+
+        {% if success_message %}
+            <div class="form-alert form-alert-success" role="status">
+                <i class="fa-solid fa-circle-check"></i>
+                <p>{{ success_message }}</p>
+            </div>
+        {% endif %}
+
+        <form method="POST" class="auth-form">
+            {% csrf_token %}
+
+            <div class="auth-field">
+                <label for="register-username">Username</label>
+                <input
+                    id="register-username"
+                    type="text"
+                    name="username"
+                    value="{{ form_data.username|default:'' }}"
+                    placeholder="Choose a username"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="auth-name-row">
+                <div class="auth-field">
+                    <label for="register-first-name">First name</label>
+                    <input
+                        id="register-first-name"
+                        type="text"
+                        name="first_name"
+                        value="{{ form_data.first_name|default:'' }}"
+                        placeholder="First name"
+                        autocomplete="given-name"
+                        required
+                    >
+                </div>
+
+                <div class="auth-field">
+                    <label for="register-last-name">Last name</label>
+                    <input
+                        id="register-last-name"
+                        type="text"
+                        name="last_name"
+                        value="{{ form_data.last_name|default:'' }}"
+                        placeholder="Last name"
+                        autocomplete="family-name"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="auth-field">
+                <label for="register-email">Email address</label>
+                <input
+                    id="register-email"
+                    type="email"
+                    name="email"
+                    value="{{ form_data.email|default:'' }}"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    required
+                >
+            </div>
+
+            <div class="auth-field">
+                <label for="register-phone">Phone number</label>
+                <input
+                    id="register-phone"
+                    type="tel"
+                    name="phone"
+                    value="{{ form_data.phone|default:'' }}"
+                    placeholder="Enter your phone number"
+                    autocomplete="tel"
+                    maxlength="15"
+                    required
+                >
+            </div>
+
+            <div class="auth-field">
+                <label for="register-password">Password</label>
+                <input
+                    id="register-password"
+                    type="password"
+                    name="password"
+                    placeholder="Create a password"
+                    autocomplete="new-password"
+                    required
+                >
+            </div>
+
+            <div class="auth-field">
+                <label for="register-confirm-password">Confirm password</label>
+                <input
+                    id="register-confirm-password"
+                    type="password"
+                    name="confirm_password"
+                    placeholder="Enter your password again"
+                    autocomplete="new-password"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="auth-submit-btn">
+                Create Account
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </form>
+
+        <p class="auth-footer">
+            Already have an account?
+            <a href="{% url 'login' %}">Sign in</a>
+        </p>
+
+    </div>
+</div>
+
+</body>
+</html>

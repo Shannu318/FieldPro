@@ -1,0 +1,84 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Service Request | FieldPro</title>
+
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="app">
+
+    <main class="dashboard-content service-request-details-page">
+        <a href="{% url 'manager_dashboard' %}" class="details-back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Manager Dashboard
+        </a>
+
+        <div class="detail-page-heading">
+            <div>
+                <p class="profile-eyebrow">MANAGER WORKSPACE</p>
+                <h1>Assign Service Request</h1>
+                <p>Review the request and select a technician.</p>
+            </div>
+        </div>
+
+        <section class="detail-main-card">
+            <h2>Request #{{ service_request.id }}</h2>
+
+            <div class="detail-info-row">
+                <span>Request title</span>
+                <strong>{{ service_request.title }}</strong>
+            </div>
+
+            <div class="detail-info-row">
+                <span>Customer</span>
+                <strong>{{ service_request.customer.username }}</strong>
+            </div>
+
+            <div class="detail-info-row">
+                <span>Priority</span>
+                <strong>{{ service_request.get_priority_display }}</strong>
+            </div>
+
+            <div class="detail-info-row">
+                <span>Current status</span>
+                <strong>{{ service_request.get_status_display }}</strong>
+            </div>
+
+            <hr>
+
+            <form method="POST" class="service-request-form">
+                {% csrf_token %}
+
+                <div class="form-field">
+                    <label for="technician">Select Technician</label>
+                    <select id="technician" name="technician" required>
+                        <option value="">Select a technician</option>
+
+                        {% for technician in technicians %}
+                            <option value="{{ technician.id }}">
+                                {{ technician.username }}
+                            </option>
+                        {% empty %}
+                            <option value="" disabled>No technicians available</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="form-submit-btn">
+                        <i class="fa-solid fa-user-check"></i>
+                        Assign Technician
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+</body>
+</html>

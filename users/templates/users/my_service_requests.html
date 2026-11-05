@@ -1,0 +1,201 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Service Requests | FieldPro</title>
+    
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div>
+                <h2>Field<span>Pro</span></h2>
+                <small>Service Management</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <p class="nav-title">MAIN</p>
+
+            <a href="{% url 'dashboard' %}"
+               class="nav-link"
+               title="Dashboard"
+               aria-label="Dashboard">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{% url 'my_service_requests' %}"
+               class="nav-link active"
+               title="My Requests"
+               aria-label="My Requests">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>My Requests</span>
+            </a>
+
+            <a href="{% url 'create_service_request' %}"
+               class="nav-link"
+               title="New Request"
+               aria-label="New Request">
+                <i class="fa-solid fa-plus"></i>
+                <span>New Request</span>
+            </a>
+
+            <p class="nav-title">ACCOUNT</p>
+
+            <a href="{% url 'customer_profile' %}"
+               class="nav-link"
+               title="My Profile"
+               aria-label="My Profile">
+                <i class="fa-solid fa-user"></i>
+                <span>My Profile</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="{% url 'logout' %}"
+               class="nav-link logout"
+               title="Logout"
+               aria-label="Logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <p class="breadcrumb">Customer / Requests</p>
+                <h1>My Service Requests</h1>
+            </div>
+
+            <div class="user-area">
+                <div class="user-avatar">
+                    {{ user.username|first|upper }}
+                </div>
+                <div class="user-info">
+                    <strong>{{ user.username }}</strong>
+                    <span>Customer</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-content">
+
+            <div class="requests-heading">
+                <div>
+                    <h2>Your Requests ({{ total_requests }})</h2>
+                    <p>View your service history and track progress.</p>
+                </div>
+
+                <a href="{% url 'create_service_request' %}"
+                   class="create-request-btn">
+                    <i class="fa-solid fa-plus"></i>
+                    New Request
+                </a>
+            </div>
+
+            {% if service_requests %}
+
+                <div class="request-list">
+                    {% for service_request in service_requests %}
+
+                        <article class="request-card">
+
+                            <div class="request-card-top">
+                                <div>
+                                    <span class="request-number">
+                                        Request #FSR-{{ service_request.id|stringformat:"04d"}}
+                                    </span>
+                                    <h3>{{ service_request.title }}</h3>
+                                </div>
+
+                                <span class="request-status status-{{ service_request.status|lower }}">
+                                    {{ service_request.get_status_display }}
+                                </span>
+                            </div>
+
+                            <p class="request-description">
+                                {{ service_request.description }}
+                            </p>
+
+                            <div class="request-details">
+
+                                <div class="request-detail">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <span>{{ service_request.address }}</span>
+                                </div>
+
+                                <div class="request-detail">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    <span>{{ service_request.created_at|date:"M d, Y" }}</span>
+                                </div>
+
+                                <div class="request-detail">
+                                    <i class="fa-solid fa-flag"></i>
+                                    <span class="priority priority-{{ service_request.priority|lower }}">
+                                        {{ service_request.get_priority_display }} Priority
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div class="request-card-footer">
+                                <span class="request-updated">
+                                    Updated {{ service_request.updated_at|date:"M d, Y" }}
+                                </span>
+
+                                <a href="{% url 'service_request_detail' service_request.id %}"
+                                   class="request-details-btn">
+                                    View Details
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+                </div>
+
+            {% else %}
+
+                <div class="requests-empty">
+                    <div class="empty-icon">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </div>
+
+                    <h3>No service requests yet</h3>
+                    <p>Your service requests will appear here after you create one.</p>
+
+                    <a href="{% url 'create_service_request' %}"
+                       class="create-request-btn">
+                        <i class="fa-solid fa-plus"></i>
+                        Create Your First Request
+                    </a>
+                </div>
+
+            {% endif %}
+
+        </section>
+    </main>
+</div>
+</body>
+</html>
