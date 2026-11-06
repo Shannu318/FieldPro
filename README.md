@@ -136,3 +136,20 @@ This project demonstrates Django development, role-based authentication, databas
 **S. Shanmukha**
 
 GitHub: [Shannu318](https://github.com/Shannu318)
+
+## Application Screenshots
+
+### Customer Dashboard
+![Customer Dashboard](screenshots/customer-dashboard.png)
+
+### Manager Dashboard
+![Manager Dashboard](screenshots/manager-dashboard.png)
+
+### Technician Dashboard
+![Technician Dashboard](screenshots/technician-dashboard.png)
+
+### Technician Directory
+![Technician Directory](screenshots/technician-directory.png)
+
+### Manager Service Requests
+![Manager Service Requests](screenshots/manager-service-requests.png)
